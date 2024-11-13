@@ -16,6 +16,7 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
+import NotFound from './pages/404';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,10 +33,46 @@ function App() {
   return loading ? (
     <Loader />
   ) : (
-    <DefaultLayout>
-      <Routes>
+    <Routes>
+      <Route
+        index
+        element={
+          <>
+            <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <SignIn />
+          </>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <>
+            <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <SignUp />
+          </>
+        }
+      />
+      {/* <Route
+        path="*"
+        element={
+          <>
+            <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <NotFound />
+          </>
+        }
+      /> */}
+      <Route element={<DefaultLayout />}>
         <Route
-          index
+          path="*"
+          element={
+            <>
+              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <NotFound />
+            </>
+          }
+        />
+        <Route
+          path="/dashboard"
           element={
             <>
               <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
@@ -124,26 +161,8 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/auth/signin"
-          element={
-            <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignIn />
-            </>
-          }
-        />
-        <Route
-          path="/auth/signup"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignUp />
-            </>
-          }
-        />
-      </Routes>
-    </DefaultLayout>
+      </Route>
+    </Routes>
   );
 }
 
