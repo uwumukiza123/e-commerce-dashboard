@@ -1,0 +1,27 @@
+{
+  "default_branch": "dev",
+  "branches": [
+    "dev",
+    "ft/add-sidebar",
+    "ft/authentication",
+    "ft/navbar",
+    "ft/sidebar",
+    "origin"
+  ],
+  "parent": {
+    "dev": null,
+    "ft/add-sidebar": "dev",
+    "ft/authentication": "dev",
+    "ft/navbar": "dev",
+    "ft/sidebar": "dev",
+    "origin": "dev"
+  },
+  "order": [
+    "dev",
+    "ft/add-sidebar",
+    "ft/authentication",
+    "ft/navbar",
+    "ft/sidebar",
+    "origin"
+  ]
+}
