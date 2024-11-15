@@ -14,6 +14,8 @@ const initialState: AuthState = {
   error: null,
 };
 
+const url = import.meta.env.VITE_API_URL;
+
 export const signInUser = createAsyncThunk(
   'auth/signInUser',
   async (
@@ -21,7 +23,7 @@ export const signInUser = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch(`${url}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +34,7 @@ export const signInUser = createAsyncThunk(
       if (!response.ok) throw new Error('Failed to sign in');
 
       const data = await response.json();
-      return { user: data.user, token: data.token };
+      return { token: data.user };
     } catch (error: any) {
       return rejectWithValue(error.message || 'An error occurred');
     }
@@ -57,7 +59,6 @@ const authSlice = createSlice({
       })
       .addCase(signInUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
         state.token = action.payload.token;
 
         if (action.payload.token) {
