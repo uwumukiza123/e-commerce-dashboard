@@ -38,8 +38,6 @@ export const signInUser = createAsyncThunk(
         token(data.token);
       }
 
-      console.log('token:', data.user);
-
       return data.user;
     } catch (error: any) {
       return rejectWithValue(error.message || 'An error occurred');
