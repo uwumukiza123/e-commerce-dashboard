@@ -2,25 +2,24 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 type AuthState = {
   token: string | null;
+  user: string | null;
   isLoading: boolean;
   error: string | null;
 };
 
-type UserData = {
-  email: string;
-  password: string;
-  token: any;
-};
-
 const initialState: AuthState = {
-  token: null,
+  token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
+  user: null,
   isLoading: false,
   error: null,
 };
 
 export const signInUser = createAsyncThunk(
   'auth/signInUser',
-  async ({ email, password, token }: UserData, { rejectWithValue }) => {
+  async (
+    { email, password }: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await fetch('http://localhost:8000/api/auth/login', {
         method: 'POST',
@@ -33,12 +32,7 @@ export const signInUser = createAsyncThunk(
       if (!response.ok) throw new Error('Failed to sign in');
 
       const data = await response.json();
-
-      if (token && data.token) {
-        token(data.token);
-      }
-
-      return data.user;
+      return { user: data.user, token: data.token };
     } catch (error: any) {
       return rejectWithValue(error.message || 'An error occurred');
     }
@@ -48,7 +42,13 @@ export const signInUser = createAsyncThunk(
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.token = null;
+      state.user = null;
+      localStorage.removeItem('token');
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signInUser.pending, (state) => {
@@ -57,7 +57,12 @@ const authSlice = createSlice({
       })
       .addCase(signInUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.token = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+
+        if (action.payload.token) {
+          localStorage.setItem('token', action.payload.token);
+        }
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -66,4 +71,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

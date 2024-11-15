@@ -8,7 +8,6 @@ import Logo from '../../images/logo/logo.svg';
 import SignUpIcon from '../../images/authentication/SignUp';
 import EmailIcon from '../../images/authentication/EmailIcon';
 import PasswordIcon from '../../images/authentication/PasswordIcon';
-import { useAuth } from '../../context/AuthContext';
 import GoogleIcon from '../../images/authentication/GoogleIcon';
 
 const SignIn: React.FC = () => {
@@ -18,7 +17,6 @@ const SignIn: React.FC = () => {
   });
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
-  const { token } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +34,6 @@ const SignIn: React.FC = () => {
       signInUser({
         email: formData.email,
         password: formData.password,
-        token,
       }),
     )
       .unwrap()
