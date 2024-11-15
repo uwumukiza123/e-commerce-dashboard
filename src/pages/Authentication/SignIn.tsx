@@ -12,17 +12,33 @@ import { useAuth } from '../../context/AuthContext';
 import GoogleIcon from '../../images/authentication/GoogleIcon';
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
   const dispatch = useDispatch<AppDispatch>();
   const { error } = useSelector((state: RootState) => state.auth);
-  const { saveToken } = useAuth();
+  const { token } = useAuth();
   const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
 
-    dispatch(signInUser({ email, password, saveToken }))
+    dispatch(
+      signInUser({
+        email: formData.email,
+        password: formData.password,
+        token,
+      }),
+    )
       .unwrap()
       .then(() => {
         navigate('/dashboard');
@@ -65,9 +81,10 @@ const SignIn: React.FC = () => {
                   <div className="relative">
                     <input
                       type="email"
+                      name="email"
                       placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={formData.email}
+                      onChange={handleChange}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
                     />
                     <span className="absolute right-4 top-4">
@@ -83,9 +100,10 @@ const SignIn: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      name="password"
                       placeholder="enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={formData.password}
+                      onChange={handleChange}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
                     />
                     <span className="absolute right-4 top-4">

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 type AuthState = {
-  user: string | null;
+  token: string | null;
   isLoading: boolean;
   error: string | null;
 };
@@ -9,18 +9,18 @@ type AuthState = {
 type UserData = {
   email: string;
   password: string;
-  saveToken: any;
+  token: any;
 };
 
 const initialState: AuthState = {
-  user: null,
+  token: null,
   isLoading: false,
   error: null,
 };
 
 export const signInUser = createAsyncThunk(
   'auth/signInUser',
-  async ({ email, password, saveToken }: UserData, { rejectWithValue }) => {
+  async ({ email, password, token }: UserData, { rejectWithValue }) => {
     try {
       const response = await fetch('http://localhost:8000/api/auth/login', {
         method: 'POST',
@@ -34,9 +34,11 @@ export const signInUser = createAsyncThunk(
 
       const data = await response.json();
 
-      if (saveToken && data.token) {
-        saveToken(data.token);
+      if (token && data.token) {
+        token(data.token);
       }
+
+      console.log('token:', data.user);
 
       return data.user;
     } catch (error: any) {
@@ -57,7 +59,7 @@ const authSlice = createSlice({
       })
       .addCase(signInUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+        state.token = action.payload;
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.isLoading = false;
