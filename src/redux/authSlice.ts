@@ -31,10 +31,14 @@ export const signInUser = createAsyncThunk(
         body: JSON.stringify({ email, password }),
       });
 
-      if (!response.ok) throw new Error('Failed to sign in');
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || 'Failed to sign in');
+      }
 
       const data = await response.json();
-      return { token: data.user };
+      console.log('Token retrieved:', data.userToken);
+      return { token: data.userToken };
     } catch (error: any) {
       return rejectWithValue(error.message || 'An error occurred');
     }
