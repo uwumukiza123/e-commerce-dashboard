@@ -28,7 +28,6 @@ const PostForm = () => {
         setLoading(false);
       }
     };
-
     fetchCategoriesData();
   }, [dispatch]);
 

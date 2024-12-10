@@ -8,6 +8,7 @@ import {
 type PostState = {
   posts: any[];
   categories: any[];
+  products: any[];
   loading: boolean;
   error: string | null;
 };
@@ -15,6 +16,7 @@ type PostState = {
 const initialState: PostState = {
   posts: [],
   categories: [],
+  products: [],
   loading: false,
   error: null,
 };
@@ -43,7 +45,7 @@ const postSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = action.payload;
+        state.products = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.loading = false;
