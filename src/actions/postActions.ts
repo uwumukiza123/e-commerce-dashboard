@@ -56,7 +56,7 @@ export const fetchPosts = createAsyncThunk(
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-
+      console.log('products========', response);
       return response.json();
     } catch (err: any) {
       return rejectWithValue(err.message || 'Failed to fetch posts');

@@ -31,6 +31,16 @@ const sidebarItems = [
         icon: ProfileIcon,
       },
       {
+        label: 'Categories',
+        to: '/categories',
+        icon: ProfileIcon,
+      },
+      {
+        label: 'Products',
+        to: '/products',
+        icon: ProfileIcon,
+      },
+      {
         label: 'Forms',
         to: '#',
         icon: FormsIcon,

@@ -87,62 +87,73 @@ const PostForm = () => {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white w-3/4 p-6 rounded-md shadow-md"
+    >
       <div>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          required
-        />
-      </div>
-      <div>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-          rows={4}
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="text"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Price"
-          required
-        />
-      </div>
-      <div>
-        <CategoryDropdown
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        />
-      </div>
-      <div>
-        <input type="file" onChange={handleFileChange} />
-      </div>
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt="Product Preview"
-          style={{ maxWidth: '100%' }}
-        />
-      )}
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <button
-          type="submit"
-          disabled={
-            loading || !title || !description || !price || !selectedCategory
-          }
-        >
-          {loading ? 'Submitting...' : 'Create Post'}
-        </button>
+        <div className="grid">
+          <label htmlFor="title">Title:</label>
+          <input
+            className="border border-blue-950 w-64"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div className="grid">
+          <label htmlFor="description">Description:</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="border border-blue-950 w-64"
+            rows={4}
+            required
+          />
+        </div>
+        <div className="grid">
+          <label htmlFor="price">Price:</label>
+          <input
+            className="border border-blue-950 w-64"
+            type="text"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+        </div>
+        <div className="py-4">
+          <div className="border w-64 border-blue-950">
+            <CategoryDropdown
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            />
+          </div>
+        </div>
+        <div>
+          <input type="file" onChange={handleFileChange} />
+        </div>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Product Preview"
+            style={{ maxWidth: '100%' }}
+          />
+        )}
+        {loading && <p>Loading...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className="py-4">
+          <button
+            className="h-10 w-36 border border-blue-950 rounded-md"
+            type="submit"
+            disabled={
+              loading || !title || !description || !price || !selectedCategory
+            }
+          >
+            {loading ? 'Submitting...' : 'Create Post'}
+          </button>
+        </div>
       </div>
     </form>
   );
