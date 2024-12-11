@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
-import { createPost, fetchCategories } from '../../actions/postActions';
+import {
+  createPost,
+  updatePost,
+  fetchCategories,
+} from '../../actions/postActions';
 
-const PostForm = () => {
+const PostForm = ({
+  editingProduct,
+  onSuccess,
+}: {
+  editingProduct?: any;
+  onSuccess?: () => void;
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -31,6 +41,16 @@ const PostForm = () => {
     fetchCategoriesData();
   }, [dispatch]);
 
+  useEffect(() => {
+    if (editingProduct) {
+      setTitle(editingProduct.title || '');
+      setDescription(editingProduct.description || '');
+      setPrice(editingProduct.price || '');
+      setSelectedCategory(editingProduct.categoryId || '');
+      setImageUrl(editingProduct.imageUrl || null);
+    }
+  }, [editingProduct]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -42,24 +62,40 @@ const PostForm = () => {
     e.preventDefault();
 
     try {
-      await dispatch(
-        createPost({
-          title,
-          description,
-          price,
-          categoryId: String(selectedCategory),
-          imageUrl,
-        }),
-      ).unwrap();
-
+      setLoading(true);
+      if (editingProduct) {
+        await dispatch(
+          updatePost({
+            id: editingProduct.id,
+            title,
+            description,
+            price,
+            categoryId: String(selectedCategory),
+            imageUrl,
+          }),
+        ).unwrap();
+      } else {
+        await dispatch(
+          createPost({
+            title,
+            description,
+            price,
+            categoryId: String(selectedCategory),
+            imageUrl,
+          }),
+        ).unwrap();
+      }
+      onSuccess?.();
       setTitle('');
       setDescription('');
       setPrice('');
       setSelectedCategory('');
       setImageUrl(null);
     } catch (err: any) {
-      console.error('Error creating post:', err.message || err);
-      setError(err.message || 'Error creating post');
+      console.error('Error saving post:', err.message || err);
+      setError(err.message || 'Error saving post');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -150,7 +186,11 @@ const PostForm = () => {
               loading || !title || !description || !price || !selectedCategory
             }
           >
-            {loading ? 'Submitting...' : 'Create Post'}
+            {loading
+              ? 'Submitting...'
+              : editingProduct
+              ? 'Update Post'
+              : 'Create Post'}
           </button>
         </div>
       </div>

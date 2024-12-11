@@ -38,8 +38,6 @@ export const createPost = createAsyncThunk(
         throw new Error(`Error: ${response.statusText}`);
       }
 
-      console.log('post data:', postData);
-
       return await response.json();
     } catch (err: any) {
       return rejectWithValue(err.message || 'Failed to create post');
@@ -60,6 +58,46 @@ export const fetchPosts = createAsyncThunk(
       return data;
     } catch (err: any) {
       return rejectWithValue(err.message || 'Failed to fetch posts');
+    }
+  },
+);
+
+export const updatePost = createAsyncThunk(
+  'post/updatePost',
+  async (postData: ProductsData & { id: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetchWithAuth(
+        `${url}/api/products/${postData.id}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(postData),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      return await response.json();
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to update post');
+    }
+  },
+);
+
+export const deletePost = createAsyncThunk(
+  'post/deletePost',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await fetchWithAuth(`${url}/api/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      console.log('response: ', id);
+      return id;
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to delete post');
     }
   },
 );

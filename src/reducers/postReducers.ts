@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createPost,
+  deletePost,
   fetchCategories,
   fetchPosts,
+  updatePost,
 } from '../actions/postActions';
 
 type PostState = {
@@ -51,6 +53,33 @@ const postSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(updatePost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts = state.posts.map((post) =>
+          post.id === action.payload.id ? action.payload : post,
+        );
+      })
+      .addCase(updatePost.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deletePost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts = state.posts.filter((post) => post.id !== action.payload);
+      })
+
+      .addCase(deletePost.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -66,5 +95,4 @@ const postSlice = createSlice({
   },
 });
 
-// export const { setToken } = postSlice.actions;
 export default postSlice.reducer;
