@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PostForm from '../components/Forms/PostForms';
+import { useNavigate } from 'react-router-dom';
 import { fetchPosts, deletePost } from '../actions/postActions';
 
 const Products: React.FC = () => {
-  const { products, loading, categories } = useSelector(
-    (state: any) => state.posts,
-  );
+  const { products, loading } = useSelector((state: any) => state.posts);
   const [showPostForm, setShowPostForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  console.log('data', products);
 
   useEffect(() => {
     dispatch<any>(fetchPosts());
@@ -26,12 +28,16 @@ const Products: React.FC = () => {
     }
   };
 
+  const openProductDetails = (productId: string) => {
+    navigate(`/products/${productId}`);
+  };
+
   return (
-    <div>
+    <div className="bg-white px-8 shadow-2xl rounded-lg">
       <div className="flex justify-end">
         <button
           onClick={togglePostForm}
-          className="border rounded-md h-12 w-36"
+          className="border rounded-md h-12 w-36 mt-4 text-blue-950 font-satoshi font-medium"
         >
           {showPostForm ? 'Cancel' : 'Add Product'}
         </button>
@@ -47,57 +53,39 @@ const Products: React.FC = () => {
       )}
       <ul>
         {products.length === 0 && !loading && <p>No products available</p>}
-        {products.map((product: any) => (
-          <li key={product.id} className="pb-5 border-b">
-            <div className="flex items-center justify-between">
-              <h3
-                onClick={() => setSelectedProduct(product)}
-                className="cursor-pointer text-white hover:underline"
-              >
-                {product.title}
-              </h3>
-              <div className="mt-4">
-                <button
-                  onClick={() => {
-                    setSelectedProduct(product);
-                    setShowPostForm(true);
-                  }}
-                  className="mr-2 border rounded-md px-3 py-1"
+        {!showPostForm &&
+          products.map((product: any) => (
+            <li
+              key={product.id}
+              className="pb-5 border-b text-blue-950 font-satoshi font-light"
+            >
+              <div className="flex items-center justify-between">
+                <h3
+                  onClick={() => openProductDetails(product.id)}
+                  className="cursor-pointer hover:underline text-[18px]"
                 >
-                  Edit
-                </button>
-                <button
-                  onClick={() => deleteProduct(product.id)}
-                  className="border rounded-md px-3 py-1 text-red-600"
-                >
-                  Delete
-                </button>
+                  {product.title}
+                </h3>
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setShowPostForm(true);
+                    }}
+                    className="mr-2 border rounded-md px-3 py-1"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteProduct(product.id)}
+                    className="border rounded-md px-3 py-1 text-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-            {!showPostForm && selectedProduct?.id === product.id && (
-              <div className="p-4 bg-gray-100 border rounded-md mt-2">
-                <p>
-                  <strong>Title:</strong> {product.title}
-                </p>
-                <p>
-                  <strong>Description:</strong> {product.description}
-                </p>
-                <p>
-                  <strong>Price:</strong> ${product.price}
-                </p>
-                <p>
-                  <strong>Category:</strong>{' '}
-                  {
-                    categories.find(
-                      (category: any) => category.id === product.categoryId,
-                    )?.name
-                  }
-                </p>
-                <img src={product.imageUrl} alt="product image" />
-              </div>
-            )}
-          </li>
-        ))}
+            </li>
+          ))}
       </ul>
     </div>
   );

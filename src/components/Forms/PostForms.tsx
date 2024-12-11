@@ -54,7 +54,8 @@ const PostForm = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageUrl(URL.createObjectURL(file));
+      const result = setImageUrl(URL.createObjectURL(file));
+      return `upload/${result}`;
     }
   };
 
@@ -124,41 +125,41 @@ const PostForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white w-3/4 p-6 rounded-md shadow-md"
+      className="bg-white w-3/4 p-6 rounded-md shadow-md text-blue-950 font-light"
     >
       <div>
-        <div className="grid">
+        <div className="grid py-2">
           <label htmlFor="title">Title:</label>
           <input
-            className="border border-blue-950 w-64"
+            className="border w-64 px-2 text-blue-950"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
-        <div className="grid">
+        <div className="grid py-2">
           <label htmlFor="description">Description:</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="border border-blue-950 w-64"
+            className="border w-64 px-2 text-blue-950"
             rows={4}
             required
           />
         </div>
-        <div className="grid">
+        <div className="grid py-2">
           <label htmlFor="price">Price:</label>
           <input
-            className="border border-blue-950 w-64"
+            className="border w-64 px-2 text-blue-950"
             type="text"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
           />
         </div>
-        <div className="py-4">
-          <div className="border w-64 border-blue-950">
+        <div className="py-3">
+          <div className="border w-64">
             <CategoryDropdown
               categories={categories}
               selectedCategory={selectedCategory}
@@ -180,7 +181,7 @@ const PostForm = ({
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <div className="py-4">
           <button
-            className="h-10 w-36 border border-blue-950 rounded-md"
+            className="h-10 w-36 border border-blue-950 rounded-md text-blue-950"
             type="submit"
             disabled={
               loading || !title || !description || !price || !selectedCategory
