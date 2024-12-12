@@ -38,7 +38,7 @@ const postSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts.push(action.payload);
+        state.products.push(action.payload);
       })
       .addCase(createPost.rejected, (state, action) => {
         state.loading = false;
@@ -62,7 +62,7 @@ const postSlice = createSlice({
       })
       .addCase(updatePost.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = state.posts.map((post) =>
+        state.products = state.products.map((post) =>
           post.id === action.payload.id ? action.payload : post,
         );
       })
@@ -76,7 +76,9 @@ const postSlice = createSlice({
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = state.posts.filter((post) => post.id !== action.payload);
+        state.products = state.products.filter(
+          (product) => product.id !== action.payload,
+        );
       })
 
       .addCase(deletePost.rejected, (state, action) => {
@@ -101,7 +103,7 @@ const postSlice = createSlice({
       })
       .addCase(createCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts.push(action.payload);
+        state.categories.push(action.payload);
       })
       .addCase(createCategories.rejected, (state, action) => {
         state.loading = false;
@@ -113,8 +115,8 @@ const postSlice = createSlice({
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = state.posts.map((post) =>
-          post.id === action.payload.id ? action.payload : post,
+        state.categories = state.categories.map((category) =>
+          category.id !== action.payload.id ? category : action.payload,
         );
       })
       .addCase(updateCategory.rejected, (state, action) => {
@@ -127,7 +129,9 @@ const postSlice = createSlice({
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = state.posts.filter((post) => post.id !== action.payload);
+        state.categories = state.categories.filter(
+          (category) => category.id !== action.payload,
+        );
       })
 
       .addCase(deleteCategory.rejected, (state, action) => {

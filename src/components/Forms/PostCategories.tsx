@@ -14,7 +14,6 @@ const PostCategories = ({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,8 +28,8 @@ const PostCategories = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const result = setImageUrl(URL.createObjectURL(file));
-      return `upload/${result}`;
+      const result = URL.createObjectURL(file);
+      setImageUrl(result);
     }
   };
 

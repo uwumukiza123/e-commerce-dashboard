@@ -26,6 +26,7 @@ const Products: React.FC = () => {
   const deleteProduct = async (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {
       await dispatch<any>(deletePost(id));
+      dispatch<any>(fetchPosts());
     }
   };
 
@@ -49,6 +50,7 @@ const Products: React.FC = () => {
           onSuccess={() => {
             setShowPostForm(false);
             setSelectedProduct(null);
+            dispatch<any>(fetchPosts());
           }}
         />
       )}

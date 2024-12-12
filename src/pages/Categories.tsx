@@ -11,8 +11,6 @@ const Categories: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log('category', categories);
-
   useEffect(() => {
     dispatch<any>(fetchCategories());
   }, [dispatch]);
@@ -25,6 +23,7 @@ const Categories: React.FC = () => {
   const deleteCategories = async (id: string) => {
     if (confirm('Are you sure you want to delete this category?')) {
       await dispatch<any>(deleteCategory(id));
+      dispatch<any>(fetchCategories());
     }
   };
 
@@ -48,6 +47,7 @@ const Categories: React.FC = () => {
           onSuccess={() => {
             setShowCategoryForm(false);
             setSelectedCategory(null);
+            dispatch<any>(fetchCategories());
           }}
         />
       )}
