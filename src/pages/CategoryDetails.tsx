@@ -22,7 +22,7 @@ const CategoryDetails: React.FC = () => {
   if (!categories) return <p>Loading...</p>;
 
   return (
-    <div className="bg-white w-3/4 p-6 rounded-md shadow-md text-blue-950 font-satoshi font-light">
+    <div className="bg-white w-3/4 p-6 rounded-md shadow-md text-blue-950 font-satoshi font-light dark:bg-boxdark dark:text-white">
       <h1 className="text-4xl pb-2 font-medium">{category.name}</h1>
       <p className="grid text-lg">
         <div className="py-4">

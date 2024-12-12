@@ -22,7 +22,7 @@ const ProductDetails: React.FC = () => {
   if (!product) return <p>Loading...</p>;
 
   return (
-    <div className="bg-white w-3/4 p-6 rounded-md shadow-md text-blue-950 font-satoshi font-light">
+    <div className="bg-white w-3/4 p-6 rounded-md shadow-md text-blue-950 dark:text-white dark:bg-boxdark font-satoshi font-light">
       <h1 className="text-4xl pb-2 font-medium">{product.title}</h1>
       <p className="grid text-lg">
         <div className="py-4">

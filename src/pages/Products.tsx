@@ -14,8 +14,6 @@ const Products: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const category = useSelector((state: any) => state.posts);
-
   useEffect(() => {
     dispatch<any>(fetchPosts());
   }, [dispatch]);
@@ -44,11 +42,11 @@ const Products: React.FC = () => {
   };
 
   return (
-    <div className="bg-white px-8 shadow-2xl rounded-lg">
+    <div className="bg-white px-8 shadow-2xl rounded-lg dark:bg-boxdark ">
       <div className="flex justify-end">
         <button
           onClick={togglePostForm}
-          className="border rounded-md h-12 w-36 mt-4 text-blue-950 font-satoshi font-medium"
+          className="border rounded-md h-12 w-36 mt-4 text-blue-950 dark:text-white font-satoshi font-medium"
         >
           {showPostForm ? 'Cancel' : 'Add Product'}
         </button>
@@ -68,14 +66,14 @@ const Products: React.FC = () => {
         {!showPostForm && (
           <div>
             <div className="border-b">
-              <h1 className="pb-5 text-2xl font-medium font-satoshi text-blue-950">
+              <h1 className="pb-5 text-2xl font-medium font-satoshi text-blue-950 dark:text-white">
                 Products
               </h1>
             </div>
             {products.map((product: any) => (
               <li
                 key={product.id}
-                className="pb-5 border-b text-blue-950 font-satoshi font-light"
+                className="pb-5 border-b text-blue-950 dark:text-white font-satoshi font-light"
               >
                 <div className="flex items-center justify-between">
                   <h3
