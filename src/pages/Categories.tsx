@@ -3,10 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import PostCategories from '../components/Forms/PostCategories';
 import { useNavigate } from 'react-router-dom';
 import { fetchCategories, deleteCategory } from '../actions/postActions';
+import ConfirmDialog from '../components/ui/Dialog';
 
 const Categories: React.FC = () => {
   const { categories, loading } = useSelector((state: any) => state.posts);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,9 +23,16 @@ const Categories: React.FC = () => {
     setSelectedCategory(null);
   };
 
-  const deleteCategories = async (id: string) => {
-    if (confirm('Are you sure you want to delete this category?')) {
-      await dispatch<any>(deleteCategory(id));
+  const handleDeleteClick = (id: string) => {
+    setCategoryToDelete(id);
+    setIsDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (categoryToDelete) {
+      await dispatch<any>(deleteCategory(categoryToDelete));
+      setCategoryToDelete(null);
+      setIsDialogOpen(false);
       dispatch<any>(fetchCategories());
     }
   };
@@ -83,7 +93,7 @@ const Categories: React.FC = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => deleteCategories(category.id)}
+                      onClick={() => handleDeleteClick(category.id)}
                       className="border rounded-md px-3 py-1 text-red-600"
                     >
                       Delete
@@ -95,6 +105,13 @@ const Categories: React.FC = () => {
           </div>
         )}
       </ul>
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        title="Delete Category?"
+        message="Are you sure you want to delete this category? This action cannot be undone."
+        onConfirm={confirmDelete}
+        onCancel={() => setIsDialogOpen(false)}
+      />
     </div>
   );
 };

@@ -3,16 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import PostProducts from '../components/Forms/PostProducts';
 import { useNavigate } from 'react-router-dom';
 import { fetchPosts, deletePost } from '../actions/postActions';
+import ConfirmDialog from '../components/ui/Dialog';
 
 const Products: React.FC = () => {
   const { products, loading } = useSelector((state: any) => state.posts);
   const [showPostForm, setShowPostForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const category = useSelector((state: any) => state.posts);
-  console.log('category', category);
 
   useEffect(() => {
     dispatch<any>(fetchPosts());
@@ -23,9 +25,16 @@ const Products: React.FC = () => {
     setSelectedProduct(null);
   };
 
-  const deleteProduct = async (id: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      await dispatch<any>(deletePost(id));
+  const handleDeleteCLick = (id: string) => {
+    setProductToDelete(id);
+    setIsDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (productToDelete) {
+      await dispatch<any>(deletePost(productToDelete));
+      setProductToDelete(null);
+      setIsDialogOpen(false);
       dispatch<any>(fetchPosts());
     }
   };
@@ -86,7 +95,7 @@ const Products: React.FC = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => deleteProduct(product.id)}
+                      onClick={() => handleDeleteCLick(product.id)}
                       className="border rounded-md px-3 py-1 text-red-600"
                     >
                       Delete
@@ -98,6 +107,13 @@ const Products: React.FC = () => {
           </div>
         )}
       </ul>
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        title="Delete Product?"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+        onConfirm={confirmDelete}
+        onCancel={() => setIsDialogOpen(false)}
+      />
     </div>
   );
 };
