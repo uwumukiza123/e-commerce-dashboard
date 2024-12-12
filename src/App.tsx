@@ -20,6 +20,7 @@ import NotFound from './pages/404';
 import Categories from './pages/Categories';
 import ProductDetails from './pages/ProductDetails';
 import Products from './pages/Products';
+import CategoryDetails from './pages/CategoryDetails';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -107,6 +108,15 @@ function App() {
             <>
               <PageTitle title="categories | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Categories />
+            </>
+          }
+        />
+        <Route
+          path="/categories/:id"
+          element={
+            <>
+              <PageTitle title="categories/:id | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <CategoryDetails />
             </>
           }
         />

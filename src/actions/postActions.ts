@@ -8,6 +8,12 @@ type ProductsData = {
   imageUrl: string | null;
 };
 
+type CategoriesData = {
+  name: string;
+  description: string;
+  imageUrl: string | null;
+};
+
 const url = import.meta.env.VITE_API_URL;
 
 const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
@@ -85,7 +91,7 @@ export const updatePost = createAsyncThunk(
 );
 
 export const deletePost = createAsyncThunk(
-  'post/deletePost',
+  'posts/deletePost',
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await fetchWithAuth(`${url}/api/products/${id}`, {
@@ -115,6 +121,69 @@ export const fetchCategories = createAsyncThunk(
       return await response.json();
     } catch (err: any) {
       return rejectWithValue(err.message || 'Failed to fetch categories');
+    }
+  },
+);
+
+export const createCategories = createAsyncThunk(
+  'posts/createCategories',
+  async (postCategories: CategoriesData, { rejectWithValue }) => {
+    try {
+      const response = await fetchWithAuth(`${url}/api/categories`, {
+        method: 'POST',
+        body: JSON.stringify(postCategories),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to create category');
+    }
+  },
+);
+
+export const updateCategory = createAsyncThunk(
+  'posts/updateCategory',
+  async (
+    postCategories: CategoriesData & { id: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await fetchWithAuth(
+        `${url}/api/categories/${postCategories.id}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(postCategories),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      return await response.json();
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to update category');
+    }
+  },
+);
+
+export const deleteCategory = createAsyncThunk(
+  'posts/deletecategory',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await fetchWithAuth(`${url}/api/categories/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      console.log('response: ', id);
+      return id;
+    } catch (err: any) {
+      return rejectWithValue(err.message || 'Failed to delete category');
     }
   },
 );

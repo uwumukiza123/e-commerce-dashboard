@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PostForm from '../components/Forms/PostForms';
+import PostProducts from '../components/Forms/PostProducts';
 import { useNavigate } from 'react-router-dom';
 import { fetchPosts, deletePost } from '../actions/postActions';
 
@@ -11,7 +11,8 @@ const Products: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log('data', products);
+  const category = useSelector((state: any) => state.posts);
+  console.log('category', category);
 
   useEffect(() => {
     dispatch<any>(fetchPosts());
@@ -43,7 +44,7 @@ const Products: React.FC = () => {
         </button>
       </div>
       {showPostForm && (
-        <PostForm
+        <PostProducts
           editingProduct={selectedProduct}
           onSuccess={() => {
             setShowPostForm(false);
@@ -53,39 +54,47 @@ const Products: React.FC = () => {
       )}
       <ul>
         {products.length === 0 && !loading && <p>No products available</p>}
-        {!showPostForm &&
-          products.map((product: any) => (
-            <li
-              key={product.id}
-              className="pb-5 border-b text-blue-950 font-satoshi font-light"
-            >
-              <div className="flex items-center justify-between">
-                <h3
-                  onClick={() => openProductDetails(product.id)}
-                  className="cursor-pointer hover:underline text-[18px]"
-                >
-                  {product.title}
-                </h3>
-                <div className="mt-4">
-                  <button
-                    onClick={() => {
-                      setSelectedProduct(product);
-                      setShowPostForm(true);
-                    }}
-                    className="mr-2 border rounded-md px-3 py-1"
+        {!showPostForm && (
+          <div>
+            <div className="border-b">
+              <h1 className="pb-5 text-2xl font-medium font-satoshi text-blue-950">
+                Products
+              </h1>
+            </div>
+            {products.map((product: any) => (
+              <li
+                key={product.id}
+                className="pb-5 border-b text-blue-950 font-satoshi font-light"
+              >
+                <div className="flex items-center justify-between">
+                  <h3
+                    onClick={() => openProductDetails(product.id)}
+                    className="cursor-pointer hover:underline text-[18px]"
                   >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteProduct(product.id)}
-                    className="border rounded-md px-3 py-1 text-red-600"
-                  >
-                    Delete
-                  </button>
+                    {product.title}
+                  </h3>
+                  <div className="mt-4">
+                    <button
+                      onClick={() => {
+                        setSelectedProduct(product);
+                        setShowPostForm(true);
+                      }}
+                      className="mr-2 border rounded-md px-3 py-1"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteProduct(product.id)}
+                      className="border rounded-md px-3 py-1 text-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))}
+          </div>
+        )}
       </ul>
     </div>
   );

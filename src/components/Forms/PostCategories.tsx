@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
-import {
-  createPost,
-  updatePost,
-  fetchCategories,
-} from '../../actions/postActions';
+import { createCategories, updateCategory } from '../../actions/postActions';
 
-const PostForm = ({
+const PostCategories = ({
   editingProduct,
   onSuccess,
 }: {
@@ -15,38 +11,17 @@ const PostForm = ({
   onSuccess?: () => void;
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    [],
-  );
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCategoriesData = async () => {
-      setLoading(true);
-      try {
-        const categoryData = await dispatch(fetchCategories()).unwrap();
-        setCategories(categoryData);
-      } catch (err: any) {
-        setError(err.message || 'Error fetching categories');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCategoriesData();
-  }, [dispatch]);
-
-  useEffect(() => {
     if (editingProduct) {
-      setTitle(editingProduct.title || '');
+      setName(editingProduct.name || '');
       setDescription(editingProduct.description || '');
-      setPrice(editingProduct.price || '');
-      setSelectedCategory(editingProduct.categoryId || '');
       setImageUrl(editingProduct.imageUrl || null);
     }
   }, [editingProduct]);
@@ -66,31 +41,25 @@ const PostForm = ({
       setLoading(true);
       if (editingProduct) {
         await dispatch(
-          updatePost({
+          updateCategory({
             id: editingProduct.id,
-            title,
+            name,
             description,
-            price,
-            categoryId: String(selectedCategory),
             imageUrl,
           }),
         ).unwrap();
       } else {
         await dispatch(
-          createPost({
-            title,
+          createCategories({
+            name,
             description,
-            price,
-            categoryId: String(selectedCategory),
             imageUrl,
           }),
         ).unwrap();
       }
       onSuccess?.();
-      setTitle('');
+      setName('');
       setDescription('');
-      setPrice('');
-      setSelectedCategory('');
       setImageUrl(null);
     } catch (err: any) {
       console.error('Error saving post:', err.message || err);
@@ -100,28 +69,6 @@ const PostForm = ({
     }
   };
 
-  const CategoryDropdown = useCallback(
-    ({
-      categories,
-      selectedCategory,
-      onChange,
-    }: {
-      categories: { id: string; name: string }[];
-      selectedCategory: string;
-      onChange: React.ChangeEventHandler<HTMLSelectElement>;
-    }) => (
-      <select value={selectedCategory} onChange={onChange}>
-        <option value="">Select Category</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
-    ),
-    [],
-  );
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -129,12 +76,12 @@ const PostForm = ({
     >
       <div>
         <div className="grid py-2">
-          <label htmlFor="title">Title:</label>
+          <label htmlFor="title">Name:</label>
           <input
             className="border w-64 px-2 text-blue-950"
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
@@ -147,25 +94,6 @@ const PostForm = ({
             rows={4}
             required
           />
-        </div>
-        <div className="grid py-2">
-          <label htmlFor="price">Price:</label>
-          <input
-            className="border w-64 px-2 text-blue-950"
-            type="text"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-        </div>
-        <div className="py-3">
-          <div className="border w-64">
-            <CategoryDropdown
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            />
-          </div>
         </div>
         <div>
           <input type="file" onChange={handleFileChange} />
@@ -183,9 +111,7 @@ const PostForm = ({
           <button
             className="h-10 w-36 border border-blue-950 rounded-md text-blue-950"
             type="submit"
-            disabled={
-              loading || !title || !description || !price || !selectedCategory
-            }
+            disabled={loading || !name || !description}
           >
             {loading
               ? 'Submitting...'
@@ -199,4 +125,4 @@ const PostForm = ({
   );
 };
 
-export default PostForm;
+export default PostCategories;
