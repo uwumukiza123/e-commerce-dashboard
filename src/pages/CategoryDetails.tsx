@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories } from '../actions/postActions';
 
 const CategoryDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { categories } = useSelector((state: any) => state.posts);
 
@@ -23,21 +24,34 @@ const CategoryDetails: React.FC = () => {
 
   return (
     <div className="bg-white w-3/4 p-6 rounded-md shadow-md text-blue-950 font-satoshi font-light dark:bg-boxdark dark:text-white">
-      <h1 className="text-4xl pb-2 font-medium">{category.name}</h1>
-      <p className="grid text-lg">
-        <div className="py-4">
-          <strong>Description:</strong>
-          <div className="border w-64 h-34 p-2 text-base">
-            {category.description}
-          </div>
+      <div>
+        <div className="h-8 mb-4 text-blue-700 font-bold">
+          <button onClick={() => navigate(-1)} className="flex">
+            <div className="pr-1">←</div>
+            <p>Back</p>
+          </button>
         </div>
-      </p>
-      <div className="border rounded-lg w-1/2 h-1/2">
-        <img
-          src={`${url}${category.imageUrl}`}
-          alt="category"
-          className="p-2"
-        />
+        <h1 className="text-4xl pb-2 font-medium">{category.name}</h1>
+        <p className="grid text-lg">
+          <div className="py-4">
+            <strong>Description:</strong>
+            <div className="border w-64 h-34 p-2 text-base">
+              {category.description}
+            </div>
+          </div>
+        </p>
+        <div>
+          {category.imageUrl && (
+            <img
+              src={
+                category.imageUrl.includes('/uploads/')
+                  ? `${url}${category.imageUrl}`
+                  : `${category.imageUrl}`
+              }
+              alt="product image"
+            />
+          )}
+        </div>
       </div>
     </div>
   );

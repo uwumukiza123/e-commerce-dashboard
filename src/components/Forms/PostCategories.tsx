@@ -25,14 +25,21 @@ const PostCategories = ({
     }
   }, [editingProduct]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const result = URL.createObjectURL(file);
-      setImageUrl(result);
+  const urlCache = new WeakMap();
+
+  const getImageUrl = (file: any) => {
+    if (!urlCache.has(file)) {
+      urlCache.set(file, URL.createObjectURL(file));
     }
+    return urlCache.get(file);
   };
 
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageUrl(getImageUrl(file));
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
